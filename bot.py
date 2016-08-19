@@ -8,9 +8,9 @@ from telebot import types
 logging.basicConfig(format = u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s', level = logging.DEBUG, filename = u'mylogtest.log')
 
 
-token='258388877:AAGnhPIOdyegB_Own_ibdh_2GpM_hkYTYAo'
+token='YOUR TOKEN'
 
-WEBHOOK_HOST = 'translatebot.herokuapp.com'
+WEBHOOK_HOST = 'YOUR DOMAIN'
 WEBHOOK_URL_PATH = 'bot'
 WEBHOOK_PORT = os.environ.get('PORT',5000)
 WEBHOOK_LISTEN = '0.0.0.0'
@@ -40,9 +40,6 @@ d=Dir()
 
 @bot.message_handler(func=lambda message: True,commands=['start'])
 def start_handler(msg):
-    bot.send_message('250577053', 'started')
-    bot.send_message('254237862', 'started')
-    #bot.send_message(msg.chat.id, 'Write translation direction\n\nExample: en-ru')
     howtoinline(msg)
     d.first=True
 
@@ -61,7 +58,7 @@ def setting_handler(msg):
     exit=inarr(msg.chat.id, None)
     if exit==None:
         exit='not set'
-    print('EXXXX', type(exit))
+    
     try:
         bot.send_message(msg.chat.id, 'Your translation direction: ' + exit) 
     except Exception as e:
@@ -97,13 +94,13 @@ def query_text(query):
                 di={id:dir}
                 q=query.query[6:]
                 exit=inarr(id,di)
-            bot.send_message('250577053', query.query)
+            
             response=textInputRequest(fsup,exit,q, id)
             msg=InputHandler(response)
             r=types.InlineQueryResultArticle('1',q,types.InputTextMessageContent(msg[0]), description=msg[0],thumb_url='https://upload.wikimedia.org/wikipedia/commons/7/7b/Translate.com_Avatar_Icon.png')
             bot.answer_inline_query(query.id, [r], cache_time=60)
         else:  
-            bot.send_message('250577053', query.query)		
+            	
             id=query.from_user.id
             exit=inarr(id, None)	
             q=query.query
@@ -118,11 +115,8 @@ def query_text(query):
 
 def inarr(id,di):
     if (di==None):
-        print(dirr.get(id))
         return(dirr.get(id))
-    print('inarr')
     dirr.update(di)
-    print(dirr, dirr.get(id))
     return(dirr.get(id))
 	
 		
@@ -159,22 +153,16 @@ def InputHandler(response):
         sendTextMessage(str(response.status_code) + ' - ' + errorCode)
 	
 	
-# Получение сообщений
 @server.route("/bot", methods=['POST'])
 def getMessage():
-    # Чтение данных от серверов telegram
     update = telebot.types.Update.de_json(request.stream.read().decode("utf-8"))
     bot.process_new_updates([update])
-    #bot.process_new_messages([telebot.types.Update.de_json(request.stream.read().decode("utf-8")).message])
     return "!", 200
 
 # Установка webhook
 @server.route("/")
 def webhook():
     bot.remove_webhook()
-    # Если вы будете использовать хостинг или сервис без https
-    # то вам необходимо создать сертификат и
-    # добавить параметр certificate=open('ваш сертификат.pem')
     return "%s" %bot.set_webhook(url=WEBHOOK_URL_BASE), 200
 
 @server.route("/remove")
@@ -182,6 +170,5 @@ def remove_hook():
     bot.remove_webhook()
     return "Webhook has been removed"
 
-# Запуск сервера
 server.run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
 webhook()
