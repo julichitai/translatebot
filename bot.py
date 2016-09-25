@@ -28,7 +28,7 @@ server=Flask(__name__)
 GETLANGS_BASE_URL = 'https://translate.yandex.net/api/v1.5/tr.json/getLangs?'
 TRANSLATE_BASE_URL='https://translate.yandex.net/api/v1.5/tr.json/translate?'
 DETECTLANG_BASE_URL='https://translate.yandex.net/api/v1.5/tr.json/detect?'
-key = 'trnsl.1.1.20160801T105156Z.3a95dad12166dd31.6cd86ae70f90bfa160354027a470fbab87adc59c'
+key = 'YOUR KEY'
 ui='en'
 
 class Dir:
